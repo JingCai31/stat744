@@ -1,11 +1,14 @@
 library(tidyverse)
-library(ggplot2)
+library(ggplot2)  ## BMB: ggplot2 is loaded as part of tidyverse (redundant)
+
+## BMB: why not use the built-in iris data set in R, which already comes
+##  with column names?
 
 #### data iris ####
 # This dataset contains 5 variables and 150 rows
 # First four columns are continuous representing the sepal length and width,
 # petal length and width.
-# Last colomn is the type of iris, which is categorical 
+# Last column is the type of iris, which is categorical 
 dat2<-read.csv("iris.data",header=FALSE)
 names(dat2)<-c("Slength","Swidth","Plength","Pwidth","class")
 
@@ -14,10 +17,12 @@ names(dat2)<-c("Slength","Swidth","Plength","Pwidth","class")
 # linear regression lines added to each type
 gg1<-(ggplot(dat2,aes(Plength,Pwidth,colour=class))
       +geom_point()
-      +geom_smooth(method="lm")
+      +geom_smooth(method="lm")  ## BMB: why lm rather than loess?
       +theme(plot.title = element_text(hjust = 0.5))
-      +ggtitle("Petal Length vs. Petal Width")
+      +ggtitle("Petal Length vs. Petal Width")  ## redundant?
       )
+
+## BMB: why are you adding scale_color_manual separately?
 print(gg1
       +scale_color_manual(values=c("#A1D99B","#41AB5D","#005A32")))
 
@@ -35,6 +40,8 @@ print(gg2+scale_fill_brewer(palette="Greens"))
 # add one column to the original data - the area of sepal, approximate to ellipse
 # histogram (in dot) of the sepal area to visualize the distribution
 # type of iris is not considered in this plot
+
+## BMB: could use dat2 %>% mutate(area=pi*Slength*Swidth/4)
 dat2$area=pi*dat2$Slength*dat2$Swidth/4
 gg3<-(ggplot(dat2,aes(x=area))
       +geom_dotplot(aes(fill = ..x..),method = "histodot",binwidth = 0.7)
@@ -42,3 +49,5 @@ gg3<-(ggplot(dat2,aes(x=area))
       +ggtitle("dotplot of sepal area")
       )
 print(gg3+scale_fill_gradient(low = "forestgreen", high = "darkseagreen1"))
+
+## BMB: did you use anything you learned from Rauser's video?
