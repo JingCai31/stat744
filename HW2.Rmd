@@ -1,0 +1,91 @@
+---
+title: "HW2"
+author: "Jing Cai (400047318)"
+date: "1/24/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+library(dplyr)
+library(tidyverse)
+library(directlabels)
+dat1<-read_csv("vaccine_data_online.csv")
+```
+
+## Comments on Jia You's Graph
+I think this graph is trying to show that the number of disease cases decreased dramatically after vaccines being licensed (or expanded recommandation), and further visually prove that vaccines have positive effect on eliminatin these diseases.
+
+Advantages for this graph:  
+1. Dynamic. Specific data can be read when moving the mouse. For someone who is not interested for the specific data, the graph is still very clear.  
+2. High contrast of colours. The year that vaccines been licensed are clearly highlighted.  
+3. Use y axis to label the years of other events.  
+
+Disadvantages:  
+1. The graph is too long (ratio of length and width is high) in viewing.  
+2. Number of cases is represented by the bubble size, and the plot is highly overlapped. In the major parts of the graph, the dismeters of the bubbles are easier to be visualised rather than the areas.  
+3. The graph is squeezed vertically, and the text "Hepatitis B" is closed to the orange bubble of the year that vaccine for measles being licensed, which causes misleading.  
+
+## Graph 1 - violin plot
+I prefer to order the disease by the year it first reported, so I rearrange the columns first.  
+In this violin plot, the x axis is the categorical variable - disease, and y axis is year with interval 5. The width is the number of cases.  
+Warning messages appearred when plotting. I don't know how to deal with it, but the code runs well.  
+```{r}
+dat2<-(dat1
+       %>% mutate(disease=fct_reorder(f=disease,x=year,fun=min)))
+gg1<-(ggplot(dat2,aes(x=disease,y=year,colour=disease,width=cases))+
+        geom_violin()+
+        scale_y_reverse(breaks=seq(1945,2015,by=5))+
+        ylab("year(year of vaccine licensed marked)")+
+        ggtitle("Trend of reported U.S. cases in 1945-2015")+
+        theme(plot.title = element_text(hjust = 0.5))
+)
+```
+Both dots and segments are used to indicate the year that vaccine licensed. I was thinking to plot segments matching the width of the violin, but I did not make it.
+```{r}
+print(gg1+
+  geom_point(data = dat2[which(dat2$vaccine!=FALSE),]))
+print(gg1+
+        geom_segment(data=dat2[which(dat2$vaccine!=FALSE),], 
+                     mapping=aes(x=as.numeric(disease)-0.2, y=year,
+                                 xend=as.numeric(disease)+0.2, yend=year)))
+```
+## comments for graph 1  
+Advantages:  
+1. The effect of vaccine is clearly showed by the width of voilin plot.  
+
+Disadvantages:  
+1. Contains much less information than Jia You's graph.  
+2. For diseases with low number of cases, the voilin plot looks like a straight line.  
+
+## Graph 2 - lines
+When plotting the number of cases in lines, the data for measles are extremely larger than the others, then I used log tranformation. 2 rows from the original has 0 cases, then log(n+1) is used.   
+Plotting nine lines in one graph looks messy, then I split it into nine plots. The years of vaccine licensed are highlighted in black dots.
+```{r}
+dat3<-(dat2
+      %>% mutate(log.cases=log10(cases+1)))
+gg3<-(ggplot(dat3,aes(x=year,y=log.cases,colour=disease))+
+        geom_line()+
+        scale_x_continuous(breaks=seq(1945,2015,by=10))+
+        xlab("year(year of vaccine licensed marked)")+
+        ggtitle("Trend of reported U.S. cases in 1945-2015")+
+        theme(plot.title = element_text(hjust = 0.5))
+)
+print(gg3+
+        geom_point(data=dat3[which(dat3$vaccine!=FALSE),],colour="black")+
+        facet_wrap( ~ disease, ncol=3))
+
+```
+
+## comments for graph 2
+Advantages:  
+1. The plots are more balanced among diseases.  
+
+
+Disadvantages:  
+1. The effect of vaccine is weakened visually in log scale.  
+2. Contains much less information than Jia You's graph.
