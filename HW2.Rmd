@@ -9,16 +9,22 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
-library(readr)
-library(dplyr)
+```{r message=FALSE}
+## BMB:
+##   - name chunks
+##   - use message=FALSE to suppress startup messages
+##   - tidyverse includes readr and dplyr
+## library(readr)
+## library(dplyr)
 library(tidyverse)
 library(directlabels)
 dat1<-read_csv("vaccine_data_online.csv")
 ```
 
 ## Comments on Jia You's Graph
-I think this graph is trying to show that the number of disease cases decreased dramatically after vaccines being licensed (or expanded recommandation), and further visually prove that vaccines have positive effect on eliminatin these diseases.
+I think this graph is trying to show that the number of disease cases decreased dramatically after vaccines being licensed (or expanded recommandation), and further visually prove that vaccines have positive effect on eliminating these diseases.
+
+**BMB** not sure about "visually prove", but OK.
 
 Advantages for this graph:  
 1. Dynamic. Specific data can be read when moving the mouse. For someone who is not interested for the specific data, the graph is still very clear.  
@@ -27,13 +33,16 @@ Advantages for this graph:
 
 Disadvantages:  
 1. The graph is too long (ratio of length and width is high) in viewing.  
-2. Number of cases is represented by the bubble size, and the plot is highly overlapped. In the major parts of the graph, the dismeters of the bubbles are easier to be visualised rather than the areas.  
+2. Number of cases is represented by the bubble size, and the plot is highly overlapped. In the major parts of the graph, the diameters of the bubbles are easier to be visualised rather than the areas.  
 3. The graph is squeezed vertically, and the text "Hepatitis B" is closed to the orange bubble of the year that vaccine for measles being licensed, which causes misleading.  
 
 ## Graph 1 - violin plot
 I prefer to order the disease by the year it first reported, so I rearrange the columns first.  
 In this violin plot, the x axis is the categorical variable - disease, and y axis is year with interval 5. The width is the number of cases.  
-Warning messages appearred when plotting. I don't know how to deal with it, but the code runs well.  
+Warning messages appearred when plotting. I don't know how to deal with it, but the code runs well.
+
+**BMB**: I don't think this violin plot necessarily does what you think?
+
 ```{r}
 dat2<-(dat1
        %>% mutate(disease=fct_reorder(f=disease,x=year,fun=min)))
@@ -56,11 +65,11 @@ print(gg1+
 ```
 ## comments for graph 1  
 Advantages:  
-1. The effect of vaccine is clearly showed by the width of voilin plot.  
+1. The effect of vaccine is clearly showed by the width of violin plot.  
 
 Disadvantages:  
 1. Contains much less information than Jia You's graph.  
-2. For diseases with low number of cases, the voilin plot looks like a straight line.  
+2. For diseases with low number of cases, the violin plot looks like a straight line.  
 
 ## Graph 2 - lines
 When plotting the number of cases in lines, the data for measles are extremely larger than the others, then I used log tranformation. 2 rows from the original has 0 cases, then log(n+1) is used.   
@@ -80,6 +89,8 @@ print(gg3+
         facet_wrap( ~ disease, ncol=3))
 
 ```
+
+**BMB**: better to use `scale_y_log10` rather than log10(y+1) transform?
 
 ## comments for graph 2
 Advantages:  
