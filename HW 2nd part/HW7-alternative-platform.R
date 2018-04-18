@@ -3,6 +3,8 @@
 ## BMB: this is an unusually creative set of data. Thanks!
 ##  it would be good to store the data as a separate CSV file
 ## 
+
+## JC: Thanks. Two lines are added to save the data.
 library(networkD3)
 
 source<-c(0,0,0,0,1,2,2,3,3,6)
@@ -19,3 +21,7 @@ forceNetwork(Links = Links, Nodes = Nodes, Source = "source",
              Target = "target", Value = "value", NodeID = "name",
              Group = "group", opacity = 1, fontSize = 16 , arrows = TRUE,
              zoom = TRUE, legend = TRUE)
+
+## save the data
+write.csv(Links,file = "Stats_course_path_links.csv")
+write.csv(Nodes,file = "Stats_course_path_nodes.csv")
