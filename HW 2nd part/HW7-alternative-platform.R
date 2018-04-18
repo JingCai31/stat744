@@ -1,4 +1,8 @@
 ## This is a plot of the path of Statistic courses in McMaster University
+
+## BMB: this is an unusually creative set of data. Thanks!
+##  it would be good to store the data as a separate CSV file
+## 
 library(networkD3)
 
 source<-c(0,0,0,0,1,2,2,3,3,6)
