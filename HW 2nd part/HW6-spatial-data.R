@@ -5,6 +5,8 @@
 ## keep zooming in, blue icons will appear, which represents individual crime
 ## by clicking the blue icon, the crime type will pop up.
 
+## JD: Looks nice, but why are most of the crimes far from London?
+
 library(leaflet)
 library(tidyverse)
 crime_london<-read.csv("2018-02-avon-and-somerset-street.csv")%>%
